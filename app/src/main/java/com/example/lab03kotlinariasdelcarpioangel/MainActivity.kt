@@ -3,72 +3,89 @@ package com.example.lab03kotlinariasdelcarpioangel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.ElevatedFilterChip
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.lab03kotlinariasdelcarpioangel.ui.theme.Lab03KotlinAriasDelCarpioAngelTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Lab03KotlinAriasDelCarpioAngelTheme {
-                MySurfaceExample()
+                MyChipExample()
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MySurfaceExample() {
-    // Usamos un Box para centrar nuestro Surface en la pantalla
-    Box(
+fun MyChipExample() {
+    // Usamos una Columna para mostrar varios chips verticalmente
+    Column(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 1. Este es el Surface que estamos personalizando
-        Surface(
-            modifier = Modifier.size(200.dp), // Le damos un tamaño fijo
-            // 2. Le damos un color de fondo
-            color = MaterialTheme.colorScheme.surfaceVariant,
-            // 3. Redondeamos sus esquinas
-            shape = RoundedCornerShape(16.dp),
-            // 4. Añadimos una sombra (elevación)
-            shadowElevation = 10.dp,
-            // 5. Añadimos un borde
-            border = BorderStroke(2.dp, Color.Red)
-        ) {
-            // Ponemos un texto dentro del Surface para que se vea el contenido
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Hola, Surface!",
-                    modifier = Modifier.padding(16.dp)
+        // --- Ejemplo 1: AssistChip ---
+        // Un chip simple para una acción, como abrir ajustes.
+        AssistChip(
+            onClick = { /* Acción al hacer clic */ },
+            label = { Text("Ajustes") },
+            leadingIcon = {
+                Icon(
+                    Icons.Filled.Settings,
+                    contentDescription = "Icono de Ajustes"
                 )
             }
-        }
+        )
+
+        // --- Ejemplo 2: FilterChip ---
+        // Un chip que puede ser seleccionado o no, ideal para filtros.
+        var selected by remember { mutableStateOf(false) }
+
+        ElevatedFilterChip(
+            selected = selected,
+            onClick = { selected = !selected }, // Cambia el estado al hacer clic
+            label = { Text("Filtro") },
+            leadingIcon = {
+                if (selected) {
+                    Icon(
+                        imageVector = Icons.Filled.Check,
+                        contentDescription = "Icono de Check",
+                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                    )
+                }
+            }
+        )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     Lab03KotlinAriasDelCarpioAngelTheme {
-        MySurfaceExample()
+        MyChipExample()
     }
 }
