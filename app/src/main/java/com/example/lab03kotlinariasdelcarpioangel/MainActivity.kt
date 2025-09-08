@@ -3,10 +3,12 @@ package com.example.lab03kotlinariasdelcarpioangel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -25,8 +27,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // Ahora llamamos a nuestra nueva función LazyRow
-                    MyLazyRow()
+                    // Llamamos a nuestra nueva función de Grid
+                    MyLazyVerticalGrid()
                 }
             }
         }
@@ -34,20 +36,31 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MyLazyRow() {
-    // 1. La lista de datos es la misma
+fun MyLazyVerticalGrid() {
+    // 1. La lista de datos sigue siendo la misma
     val items = (1..50).map { "Item $it" }
 
-    // 2. Cambiamos LazyColumn por LazyRow
-    LazyRow(
-        modifier = Modifier.fillMaxSize()
+    // 2. Usamos el componente LazyVerticalGrid
+    LazyVerticalGrid(
+        // 3. Aquí definimos el número de columnas
+        columns = GridCells.Fixed(3),
+        modifier = Modifier.fillMaxSize(),
+        // Opcional: añade espaciado entre los elementos
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // 3. La construcción de los items es idéntica
+        // 4. La construcción de los items es similar a las listas
         items(items) { item ->
-            Text(
-                text = item,
-                modifier = Modifier.padding(16.dp) // El padding ahora separa horizontalmente
-            )
+            // Para que se vea mejor, cada item tendrá su propio fondo
+            Surface(
+                color = MaterialTheme.colorScheme.primaryContainer,
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Text(
+                    text = item,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
         }
     }
 }
@@ -56,6 +69,6 @@ fun MyLazyRow() {
 @Composable
 fun DefaultPreview() {
     Lab03KotlinAriasDelCarpioAngelTheme {
-        MyLazyRow()
+        MyLazyVerticalGrid()
     }
 }
