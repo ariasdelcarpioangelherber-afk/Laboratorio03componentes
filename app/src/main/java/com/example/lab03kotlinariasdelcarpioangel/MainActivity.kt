@@ -4,23 +4,27 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlin.math.roundToInt
 import com.example.lab03kotlinariasdelcarpioangel.ui.theme.Lab03KotlinAriasDelCarpioAngelTheme
 
 class MainActivity : ComponentActivity() {
@@ -32,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MySliderExample()
+                    MySwitchExample()
                 }
             }
         }
@@ -40,9 +44,9 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MySliderExample() {
-    // 1. Estado para guardar el valor actual del slider (Float).
-    var sliderPosition by remember { mutableFloatStateOf(0f) }
+fun MySwitchExample() {
+    // 1. Estado para guardar si el switch está encendido (true) o apagado (false).
+    var isChecked by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -51,25 +55,43 @@ fun MySliderExample() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 2. Texto que muestra el valor seleccionado (redondeado a entero).
-        Text(
-            text = "Valor seleccionado: ${sliderPosition.roundToInt()}",
-            style = MaterialTheme.typography.headlineMedium
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("Modo Oscuro")
+            // 2. El componente Switch.
+            Switch(
+                checked = isChecked,
+                onCheckedChange = { newCheckedState ->
+                    isChecked = newCheckedState
+                }
+            )
+        }
 
-        // 3. El componente Slider.
-        Slider(
-            value = sliderPosition,
-            onValueChange = { newPosition ->
-                sliderPosition = newPosition
-            },
-            // Opcional: Definimos el rango de valores.
-            valueRange = 0f..100f,
-            // Opcional: Definimos los "pasos" para que el slider se mueva en incrementos.
-            // En este caso, se moverá de 5 en 5 (0, 5, 10...).
-            // El número de pasos es (100-0)/5 - 1 = 19
-            steps = 19
-        )
+        // 3. Un Box cuyo color de fondo cambia según el estado del Switch.
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(top = 24.dp)
+        ) {
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = if (isChecked) Color.DarkGray else Color.LightGray,
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = if (isChecked) "ENCENDIDO" else "APAGADO",
+                        color = if (isChecked) Color.White else Color.Black
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -77,6 +99,6 @@ fun MySliderExample() {
 @Composable
 fun DefaultPreview() {
     Lab03KotlinAriasDelCarpioAngelTheme {
-        MySliderExample()
+        MySwitchExample()
     }
 }
