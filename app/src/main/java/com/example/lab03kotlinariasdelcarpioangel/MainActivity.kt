@@ -9,21 +9,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MyButtonExamples()
+                    MyTextFieldExamples()
                 }
             }
         }
@@ -49,10 +42,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MyButtonExamples() {
-    // 1. Estado para guardar el número de clics
-    var clickCount by remember { mutableIntStateOf(0) }
-
+fun MyTextFieldExamples() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -60,59 +50,43 @@ fun MyButtonExamples() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // 1. Creamos un 'estado' para guardar el texto del primer TextField.
+        var textValue1 by remember { mutableStateOf("") }
+
         Text(
-            "Botones presionados: $clickCount",
+            "¡Hola, ${textValue1}!",
             style = MaterialTheme.typography.headlineMedium
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // 2. TextField estándar
+        TextField(
+            value = textValue1, // El valor que muestra es nuestro estado.
+            onValueChange = { newText ->
+                textValue1 = newText // Al cambiar, actualizamos nuestro estado.
+            },
+            label = { Text("Escribe tu nombre") }
         )
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // 2. Botón estándar (Button)
-        Button(onClick = { clickCount++ }) {
-            Text("Botón Estándar")
-        }
+        // --- Ejemplo con OutlinedTextField ---
+        var textValue2 by remember { mutableStateOf("") }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // 3. Botón con elevación (ElevatedButton)
-        ElevatedButton(onClick = { clickCount++ }) {
-            Text("Botón con Elevación")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // 4. Botón con borde (OutlinedButton)
-        OutlinedButton(onClick = { clickCount++ }) {
-            Text("Botón con Borde")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // 5. Botón de texto (TextButton)
-        TextButton(onClick = { clickCount++ }) {
-            Text("Botón de Texto")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // 6. Botón con icono
-        Button(onClick = { clickCount++ }) {
-            Icon(
-                Icons.Filled.Add,
-                contentDescription = "Icono de añadir",
-                modifier = Modifier.size(ButtonDefaults.IconSize)
-            )
-            Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-            Text("Añadir")
-        }
+        // 3. TextField con borde
+        OutlinedTextField(
+            value = textValue2,
+            onValueChange = { textValue2 = it }, // "it" es una forma corta de referirse a newText
+            label = { Text("Escribe tu apellido") }
+        )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     Lab03KotlinAriasDelCarpioAngelTheme {
-        MyButtonExamples()
+        MyTextFieldExamples()
     }
 }
