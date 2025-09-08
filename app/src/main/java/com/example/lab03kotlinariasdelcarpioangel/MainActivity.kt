@@ -3,69 +3,63 @@ package com.example.lab03kotlinariasdelcarpioangel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.lab03kotlinariasdelcarpioangel.ui.theme.Lab03KotlinAriasDelCarpioAngelTheme
 
-// Se necesita esta anotación para usar TopAppBar en Material 3
-@OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Lab03KotlinAriasDelCarpioAngelTheme {
-                MyScaffoldLayout()
+                MySurfaceExample()
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyScaffoldLayout() {
-    // 1. Usamos el contenedor Scaffold
-    Scaffold(
-        // 2. Definimos la barra de aplicación superior (TopAppBar)
-        topBar = {
-            TopAppBar(
-                title = { Text("Mi App con Scaffold") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                )
-            )
-        },
-        // 3. Definimos el Botón de Acción Flotante (FAB)
-        floatingActionButton = {
-            FloatingActionButton(onClick = { /* Acción al hacer clic */ }) {
-                Icon(Icons.Default.Add, contentDescription = "Añadir")
-            }
-        }
-    ) { innerPadding ->
-        // 4. Este es el contenido principal de la pantalla
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                // ¡IMPORTANTE! Aplicar el padding que nos da Scaffold
-                .padding(innerPadding),
-            contentAlignment = Alignment.Center
+fun MySurfaceExample() {
+    // Usamos un Box para centrar nuestro Surface en la pantalla
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        // 1. Este es el Surface que estamos personalizando
+        Surface(
+            modifier = Modifier.size(200.dp), // Le damos un tamaño fijo
+            // 2. Le damos un color de fondo
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            // 3. Redondeamos sus esquinas
+            shape = RoundedCornerShape(16.dp),
+            // 4. Añadimos una sombra (elevación)
+            shadowElevation = 10.dp,
+            // 5. Añadimos un borde
+            border = BorderStroke(2.dp, Color.Red)
         ) {
-            Text("Este es el contenido principal")
+            // Ponemos un texto dentro del Surface para que se vea el contenido
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Hola, Surface!",
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
         }
     }
 }
@@ -75,6 +69,6 @@ fun MyScaffoldLayout() {
 @Composable
 fun DefaultPreview() {
     Lab03KotlinAriasDelCarpioAngelTheme {
-        MyScaffoldLayout()
+        MySurfaceExample()
     }
 }
