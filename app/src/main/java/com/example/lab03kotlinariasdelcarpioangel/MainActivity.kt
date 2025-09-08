@@ -5,14 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
 import com.example.lab03kotlinariasdelcarpioangel.ui.theme.Lab03KotlinAriasDelCarpioAngelTheme
 
 class MainActivity : ComponentActivity() {
@@ -35,7 +32,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MyProgressBarExamples()
+                    MySliderExample()
                 }
             }
         }
@@ -43,9 +40,9 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MyProgressBarExamples() {
-    // 1. Estado para controlar el progreso de las barras determinadas
-    var progress by remember { mutableFloatStateOf(0.1f) }
+fun MySliderExample() {
+    // 1. Estado para guardar el valor actual del slider (Float).
+    var sliderPosition by remember { mutableFloatStateOf(0f) }
 
     Column(
         modifier = Modifier
@@ -54,47 +51,32 @@ fun MyProgressBarExamples() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Barras de Progreso Indeterminadas (Carga infinita)")
-        Spacer(modifier = Modifier.height(16.dp))
+        // 2. Texto que muestra el valor seleccionado (redondeado a entero).
+        Text(
+            text = "Valor seleccionado: ${sliderPosition.roundToInt()}",
+            style = MaterialTheme.typography.headlineMedium
+        )
 
-        // 2. Barra de progreso circular indeterminada
-        CircularProgressIndicator()
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // 3. Barra de progreso lineal indeterminada
-        LinearProgressIndicator()
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Text("Barras de Progreso Determinadas (Progreso controlado)")
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // 4. Barra de progreso circular determinada
-        CircularProgressIndicator(progress = progress)
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // 5. Barra de progreso lineal determinada
-        LinearProgressIndicator(progress = progress)
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // 6. Botón para simular el avance del progreso
-        Button(onClick = {
-            if (progress < 1f) {
-                progress += 0.1f
-            } else {
-                progress = 0.1f // Reinicia si llega al final
-            }
-        }) {
-            Text("Aumentar Progreso")
-        }
+        // 3. El componente Slider.
+        Slider(
+            value = sliderPosition,
+            onValueChange = { newPosition ->
+                sliderPosition = newPosition
+            },
+            // Opcional: Definimos el rango de valores.
+            valueRange = 0f..100f,
+            // Opcional: Definimos los "pasos" para que el slider se mueva en incrementos.
+            // En este caso, se moverá de 5 en 5 (0, 5, 10...).
+            // El número de pasos es (100-0)/5 - 1 = 19
+            steps = 19
+        )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     Lab03KotlinAriasDelCarpioAngelTheme {
-        MyProgressBarExamples()
+        MySliderExample()
     }
 }
