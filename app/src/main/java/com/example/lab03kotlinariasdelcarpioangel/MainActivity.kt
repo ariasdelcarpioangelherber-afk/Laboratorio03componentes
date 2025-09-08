@@ -3,57 +3,70 @@ package com.example.lab03kotlinariasdelcarpioangel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.lab03kotlinariasdelcarpioangel.ui.theme.Lab03KotlinAriasDelCarpioAngelTheme
 
+// Se necesita esta anotación para usar TopAppBar en Material 3
+@OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Lab03KotlinAriasDelCarpioAngelTheme {
-                MyConstraintLayout()
+                MyScaffoldLayout()
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyConstraintLayout() {
-    // 1. Envuelve tu UI en el contenedor ConstraintLayout
-    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
-
-        // 2. Crea referencias para cada componente que quieras posicionar
-        val (button, text) = createRefs()
-
-        // 3. Asigna la referencia al componente y define sus restricciones
-        Button(
-            onClick = { /*TODO*/ },
-            // Usa el modificador `constrainAs` para vincular la referencia
-            modifier = Modifier.constrainAs(button) {
-                // Centra el botón en medio de la pantalla (el padre)
-                centerTo(parent)
+fun MyScaffoldLayout() {
+    // 1. Usamos el contenedor Scaffold
+    Scaffold(
+        // 2. Definimos la barra de aplicación superior (TopAppBar)
+        topBar = {
+            TopAppBar(
+                title = { Text("Mi App con Scaffold") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.primary,
+                )
+            )
+        },
+        // 3. Definimos el Botón de Acción Flotante (FAB)
+        floatingActionButton = {
+            FloatingActionButton(onClick = { /* Acción al hacer clic */ }) {
+                Icon(Icons.Default.Add, contentDescription = "Añadir")
             }
-        ) {
-            Text("Click Me")
         }
-
-        Text(
-            "Hello World!",
-            // Vincula la referencia del texto
-            modifier = Modifier.constrainAs(text) {
-                // Posiciona la parte inferior del texto anclada a la parte superior del botón
-                bottom.linkTo(button.top, margin = 16.dp)
-                // Centra el texto horizontalmente con respecto a la pantalla
-                centerHorizontallyTo(parent)
-            }
-        )
+    ) { innerPadding ->
+        // 4. Este es el contenido principal de la pantalla
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                // ¡IMPORTANTE! Aplicar el padding que nos da Scaffold
+                .padding(innerPadding),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("Este es el contenido principal")
+        }
     }
 }
 
@@ -62,6 +75,6 @@ fun MyConstraintLayout() {
 @Composable
 fun DefaultPreview() {
     Lab03KotlinAriasDelCarpioAngelTheme {
-        MyConstraintLayout()
+        MyScaffoldLayout()
     }
 }
