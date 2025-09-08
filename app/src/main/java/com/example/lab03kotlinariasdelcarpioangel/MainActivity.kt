@@ -5,15 +5,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,7 +32,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MyTextFieldExamples()
+                    MyCheckboxExample()
                 }
             }
         }
@@ -42,43 +40,36 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MyTextFieldExamples() {
+fun MyCheckboxExample() {
+    // 1. Estado para guardar si el checkbox está marcado o no.
+    var isChecked by remember { mutableStateOf(false) }
+
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 1. Creamos un 'estado' para guardar el texto del primer TextField.
-        var textValue1 by remember { mutableStateOf("") }
+        // Usamos una Row para poner el Checkbox y el Text en la misma línea
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(16.dp)
+        ) {
+            // 2. El componente Checkbox
+            Checkbox(
+                checked = isChecked, // El estado del checkbox depende de nuestra variable
+                onCheckedChange = { newCheckedState ->
+                    isChecked = newCheckedState // Al cambiar, actualizamos la variable
+                }
+            )
+            Text("Acepto los términos y condiciones")
+        }
 
+        // 3. Mostramos un mensaje que depende del estado del checkbox
+        val message = if (isChecked) "¡Gracias por aceptar!" else "Por favor, acepta los términos."
         Text(
-            "¡Hola, ${textValue1}!",
-            style = MaterialTheme.typography.headlineMedium
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // 2. TextField estándar
-        TextField(
-            value = textValue1, // El valor que muestra es nuestro estado.
-            onValueChange = { newText ->
-                textValue1 = newText // Al cambiar, actualizamos nuestro estado.
-            },
-            label = { Text("Escribe tu nombre") }
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // --- Ejemplo con OutlinedTextField ---
-        var textValue2 by remember { mutableStateOf("") }
-
-        // 3. TextField con borde
-        OutlinedTextField(
-            value = textValue2,
-            onValueChange = { textValue2 = it }, // "it" es una forma corta de referirse a newText
-            label = { Text("Escribe tu apellido") }
+            text = message,
+            style = MaterialTheme.typography.bodyLarge,
+            color = if (isChecked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
         )
     }
 }
@@ -87,6 +78,6 @@ fun MyTextFieldExamples() {
 @Composable
 fun DefaultPreview() {
     Lab03KotlinAriasDelCarpioAngelTheme {
-        MyTextFieldExamples()
+        MyCheckboxExample()
     }
 }
