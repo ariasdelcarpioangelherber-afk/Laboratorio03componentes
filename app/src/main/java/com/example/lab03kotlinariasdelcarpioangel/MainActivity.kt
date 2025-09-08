@@ -4,9 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -22,13 +21,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Lab03KotlinAriasDelCarpioAngelTheme {
-                // Usamos un Surface para que el fondo de la app sea del color del tema
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // Aquí implementamos nuestro LazyColumn
-                    MyLazyColumn()
+                    // Ahora llamamos a nuestra nueva función LazyRow
+                    MyLazyRow()
                 }
             }
         }
@@ -36,22 +34,19 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MyLazyColumn() {
-    // 1. Creamos una lista de datos (en este caso, 50 strings)
-    val items = (1..50).map { "Item número $it" }
+fun MyLazyRow() {
+    // 1. La lista de datos es la misma
+    val items = (1..50).map { "Item $it" }
 
-    // 2. Usamos el componente LazyColumn
-    LazyColumn(
+    // 2. Cambiamos LazyColumn por LazyRow
+    LazyRow(
         modifier = Modifier.fillMaxSize()
     ) {
-        // 3. Usamos la función `items` para construir la lista dinámicamente
+        // 3. La construcción de los items es idéntica
         items(items) { item ->
-            // Para cada 'item' en nuestra lista, creamos un Text
             Text(
                 text = item,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp) // Añadimos un poco de espacio
+                modifier = Modifier.padding(16.dp) // El padding ahora separa horizontalmente
             )
         }
     }
@@ -61,6 +56,6 @@ fun MyLazyColumn() {
 @Composable
 fun DefaultPreview() {
     Lab03KotlinAriasDelCarpioAngelTheme {
-        MyLazyColumn()
+        MyLazyRow()
     }
 }
