@@ -3,19 +3,25 @@ package com.example.lab03kotlinariasdelcarpioangel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.ElevatedFilterChip
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,7 +39,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Lab03KotlinAriasDelCarpioAngelTheme {
-                MyChipExample()
+                BackdropPatternExample()
             }
         }
     }
@@ -41,44 +47,69 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyChipExample() {
-    // Usamos una Columna para mostrar varios chips verticalmente
+fun BackdropPatternExample() {
+    // 1. Estado para controlar si la capa frontal está visible/expandida
+    var frontLayerVisible by remember { mutableStateOf(true) }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Patrón Backdrop M3") },
+                navigationIcon = {
+                    // 2. Botón para mostrar/ocultar la capa frontal
+                    IconButton(onClick = { frontLayerVisible = !frontLayerVisible }) {
+                        Icon(Icons.Default.Menu, contentDescription = "Menú")
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            // 3. Capa Trasera (Back Layer) - Siempre visible
+            BackLayerContent()
+
+            // 4. Capa Frontal (Front Layer) - Su visibilidad es animada
+            AnimatedVisibility(visible = frontLayerVisible) {
+                FrontLayerContent()
+            }
+        }
+    }
+}
+
+@Composable
+fun BackLayerContent() {
+    // La capa trasera usualmente tiene opciones o filtros
     Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primaryContainer)
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // --- Ejemplo 1: AssistChip ---
-        // Un chip simple para una acción, como abrir ajustes.
-        AssistChip(
-            onClick = { /* Acción al hacer clic */ },
-            label = { Text("Ajustes") },
-            leadingIcon = {
-                Icon(
-                    Icons.Filled.Settings,
-                    contentDescription = "Icono de Ajustes"
-                )
-            }
-        )
+        Text("Esta es la Capa Trasera")
+        Text("Aquí van las opciones principales")
+    }
+}
 
-        // --- Ejemplo 2: FilterChip ---
-        // Un chip que puede ser seleccionado o no, ideal para filtros.
-        var selected by remember { mutableStateOf(false) }
-
-        ElevatedFilterChip(
-            selected = selected,
-            onClick = { selected = !selected }, // Cambia el estado al hacer clic
-            label = { Text("Filtro") },
-            leadingIcon = {
-                if (selected) {
-                    Icon(
-                        imageVector = Icons.Filled.Check,
-                        contentDescription = "Icono de Check",
-                        modifier = Modifier.size(FilterChipDefaults.IconSize)
-                    )
-                }
-            }
-        )
+@Composable
+fun FrontLayerContent() {
+    // La capa frontal muestra el contenido principal
+    Card(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 100.dp), // Un margen superior para que se vea la capa trasera
+        shape = CardDefaults.shape, // Esquinas redondeadas por defecto
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("Esta es la Capa Frontal")
+        }
     }
 }
 
@@ -86,6 +117,6 @@ fun MyChipExample() {
 @Composable
 fun DefaultPreview() {
     Lab03KotlinAriasDelCarpioAngelTheme {
-        MyChipExample()
+        BackdropPatternExample()
     }
 }
